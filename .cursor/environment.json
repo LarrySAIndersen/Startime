@@ -1,12 +1,16 @@
 {
-  "name": "Ny applikation",
+  "name": "Startime",
   "user": "ubuntu",
-  "install": "npm ci\nbash .cursor/publish-github-on-install.sh",
+  "install": "bash .cursor/install-dotnet.sh\ndotnet restore backend/Startime.Api/Startime.Api.csproj\nnpm ci --prefix frontend\nbash .cursor/publish-github-on-install.sh",
   "start": "bash .cursor/start.sh",
   "ports": [
     {
       "name": "web",
       "port": 4319
+    },
+    {
+      "name": "api",
+      "port": 5080
     }
   ]
 }

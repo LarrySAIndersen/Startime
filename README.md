@@ -1,26 +1,26 @@
 # Startime
 
-Helt ny Next.js-app med Cursor Cloud Agent-opsætning: repo-styret miljø, `install`/`start`, og dev-server til preview.
+React + .NET 8 app til Cursor Cloud Agent.
 
-GitHub-repo: [LarrySAIndersen/Startime](https://github.com/LarrySAIndersen/Startime)
+| Del | Teknologi | Port |
+|-----|-----------|------|
+| Frontend | Vite, React, TypeScript | 4319 |
+| Backend | ASP.NET Core Web API | 5080 |
 
 ## Kør lokalt
 
 ```bash
-npm ci
-npm run dev
+npm run install:all
+npm run dev:api    # terminal 1
+npm run dev:web    # terminal 2
 ```
 
-Appen kører på [http://localhost:4319](http://localhost:4319).
-
-## Push til GitHub
-
-Fra Cloud Agent (når `GH_TOKEN` har **Contents: write** eller efter `gh auth login`):
-
-```bash
-npm run push:github
-```
+Åbn [http://localhost:4319](http://localhost:4319). API: [http://localhost:5080/api/health](http://localhost:5080/api/health).
 
 ## Cloud Agent
 
-[`.cursor/environment.json`](.cursor/environment.json): `npm ci`, valgfri auto-push, dev-server via `.cursor/start.sh` (port **4319**).
+[`.cursor/environment.json`](.cursor/environment.json) installerer .NET SDK, `dotnet restore`, `npm ci` i `frontend/`, og starter begge services via tmux.
+
+## GitHub
+
+Mål-repo: [LarrySAIndersen/Startime](https://github.com/LarrySAIndersen/Startime) — `npm run push:github` når GitHub-credentials virker.
