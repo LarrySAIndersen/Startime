@@ -19,18 +19,18 @@ export default function Home() {
             Ny applikation
           </h1>
           <p className="text-lg text-zinc-600">
-            Projektet kører med samme Cloud Agent-opsætning som jeres andre
+            Helt nyt projekt med samme Cloud Agent-opsætning som jeres andre
             apps: Next.js, `.cursor/environment.json`, dev-server på port 4319,
-            og klar til Create repo + Publish.
+            og klar til Create repo og Publish.
           </p>
         </header>
 
         <Card>
           <CardHeader>
-            <CardTitle>Status</CardTitle>
+            <CardTitle>Klar til at bygge videre</CardTitle>
             <CardDescription>
-              Workspace er initialiseret. Reference-sync fra Stardesk kører
-              automatisk når agent-token har adgang til Origin-repoet.
+              Ingen kode eller data er hentet fra Stardesk eller andre
+              eksisterende apps — kun den fælles udviklingsopsætning.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3 sm:flex-row">

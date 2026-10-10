@@ -20,9 +20,6 @@
 # production
 /build
 
-# reference clones (Origin)
-/.reference/
-
 # misc
 .DS_Store
 *.pem

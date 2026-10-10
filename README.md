@@ -1,6 +1,6 @@
 # Ny applikation
 
-Next.js-app sat op til Cursor Cloud Agent på samme måde som jeres andre Origin-projekter (fx Stardesk): repo-styret miljø, automatisk `install`/`start`, og dev-server til preview.
+Helt ny Next.js-app med Cursor Cloud Agent-opsætning som jeres andre Origin-projekter: repo-styret miljø, `install`/`start`, og dev-server til preview. Ingen delt kodebase med Stardesk eller andre apps.
 
 ## Kør lokalt
 
@@ -13,11 +13,10 @@ Appen kører på [http://localhost:4319](http://localhost:4319).
 
 ## Cloud Agent
 
-Konfiguration ligger i [`.cursor/environment.json`](.cursor/environment.json):
+Konfiguration i [`.cursor/environment.json`](.cursor/environment.json):
 
-- **`install`**: `npm ci` og forsøg på at hente reference fra `larrysanders/stardesk` på Origin
+- **`install`**: `npm ci`
 - **`start`**: starter dev-server i tmux (`dev-server`-session)
-- **`repositoryDependencies`**: giver agenten adgang til reference-repos, når de er tildelt i Cursor
 
 ## Opret permanent repo
 
