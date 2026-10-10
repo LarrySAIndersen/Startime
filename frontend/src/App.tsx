@@ -1,89 +1,138 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import './App.css'
+import { VacationModal } from './components/VacationModal'
+import type { VacationRequest } from './types/vacation'
 
-type Health = {
-  ok: boolean
-  service: string
-  timestamp: string
+function greeting() {
+  const h = new Date().getHours()
+  if (h < 10) return 'God morgen'
+  if (h < 12) return 'God formiddag'
+  if (h < 18) return 'God eftermiddag'
+  return 'God aften'
 }
 
-type Status = {
-  app: string
-  stack: string[]
-  message: string
+function formatSent(iso: string) {
+  return new Date(iso).toLocaleDateString('da-DK', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
 }
 
 function App() {
-  const [health, setHealth] = useState<Health | null>(null)
-  const [status, setStatus] = useState<Status | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [requests, setRequests] = useState<VacationRequest[]>([])
+  const [loading, setLoading] = useState(true)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [toast, setToast] = useState<string | null>(null)
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const [healthRes, statusRes] = await Promise.all([
-          fetch('/api/health'),
-          fetch('/api/status'),
-        ])
-        if (!healthRes.ok || !statusRes.ok) {
-          throw new Error('API svarede ikke OK')
-        }
-        setHealth(await healthRes.json())
-        setStatus(await statusRes.json())
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Ukendt fejl')
+  const loadRequests = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/v1/vacation-requests')
+      if (res.ok) {
+        setRequests((await res.json()) as VacationRequest[])
       }
+    } finally {
+      setLoading(false)
     }
-    void load()
   }, [])
 
+  useEffect(() => {
+    void loadRequests()
+  }, [loadRequests])
+
+  useEffect(() => {
+    if (!toast) return
+    const t = window.setTimeout(() => setToast(null), 3800)
+    return () => window.clearTimeout(t)
+  }, [toast])
+
+  async function withdraw(id: string) {
+    const res = await fetch(`/api/v1/vacation-requests/${id}/withdraw`, { method: 'POST' })
+    if (res.ok) {
+      setToast('Anmodning trukket tilbage.')
+      await loadRequests()
+    }
+  }
+
+  const pending = requests.filter((r) => r.status === 'pending')
+
   return (
-    <div className="page">
-      <header className="hero">
-        <p className="eyebrow">React + .NET</p>
-        <h1>Startime</h1>
-        <p className="lead">
-          Helt ny app med React-frontend og ASP.NET Core API — samme Cloud Agent-opsætning som
-          jeres andre projekter.
-        </p>
+    <div className="shell">
+      <header className="header">
+        <div className="logo" aria-label="STAR Hub">
+          <span className="logo-bar" aria-hidden />
+          STAR <span>Hub</span>
+        </div>
+        <span>Jan Vinding</span>
       </header>
 
-      <section className="cards">
-        <article className="card">
-          <h2>Frontend</h2>
-          <p>Vite + React + TypeScript på port 4319</p>
-        </article>
-        <article className="card">
-          <h2>Backend</h2>
-          <p>ASP.NET Core 8 Web API på port 5080</p>
-        </article>
-      </section>
+      <main className="main">
+        <h1>
+          {greeting()}, Jan
+        </h1>
+        <p className="sub">Fravær · ferieønske og anmodninger</p>
 
-      <section className="card status">
-        <h2>Live fra API</h2>
-        {error && <p className="error">{error}</p>}
-        {!error && !health && <p>Henter data…</p>}
-        {health && status && (
-          <dl>
-            <div>
-              <dt>Health</dt>
-              <dd>{health.ok ? 'OK' : 'Fejl'} — {health.service}</dd>
-            </div>
-            <div>
-              <dt>Status</dt>
-              <dd>{status.message}</dd>
-            </div>
-            <div>
-              <dt>Stack</dt>
-              <dd>{status.stack.join(' · ')}</dd>
-            </div>
-            <div>
-              <dt>Tid (UTC)</dt>
-              <dd>{new Date(health.timestamp).toLocaleString('da-DK')}</dd>
-            </div>
-          </dl>
+        <div className="action-grid">
+          <button type="button" className="action-card" onClick={() => setModalOpen(true)}>
+            <h2>Ferieønske</h2>
+            <p>Send eller ret ønske – leder godkender</p>
+          </button>
+        </div>
+
+        <section className="panel" aria-labelledby="mine-anmodninger">
+          <h2 id="mine-anmodninger">Mine anmodninger og fravær</h2>
+          {loading && <p className="empty">Henter…</p>}
+          {!loading && requests.length === 0 && (
+            <p className="empty">Ingen kommende registreringer.</p>
+          )}
+          {!loading &&
+            requests.map((r) => (
+              <div className="request-row" key={r.id}>
+                <div>
+                  <span className="chip">Ferie</span>
+                  <p style={{ margin: '0.35rem 0 0' }}>{r.dateLabel}</p>
+                  {r.status === 'pending' && (
+                    <p className="status-line">
+                      Afventer godkendelse · sendt {formatSent(r.createdAt)}
+                    </p>
+                  )}
+                  {r.status === 'withdrawn' && (
+                    <p className="status-line" style={{ color: 'var(--muted)' }}>
+                      Trukket tilbage
+                    </p>
+                  )}
+                </div>
+                {r.status === 'pending' && (
+                  <button type="button" className="btn-text" onClick={() => void withdraw(r.id)}>
+                    Træk tilbage
+                  </button>
+                )}
+              </div>
+            ))}
+        </section>
+
+        {pending.length > 0 && (
+          <p className="sub" style={{ marginTop: '1rem' }}>
+            {pending.length} ferieanmodning{pending.length === 1 ? '' : 'er'} afventer godkendelse.
+          </p>
         )}
-      </section>
+      </main>
+
+      <VacationModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmitted={() => {
+          setToast('Anmodningen er sendt til din leder.')
+          void loadRequests()
+        }}
+      />
+
+      {toast && (
+        <div className="toast" role="status">
+          {toast}
+        </div>
+      )}
     </div>
   )
 }

@@ -1,5 +1,9 @@
+using Startime.Api.Routes;
+using Startime.Api.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<VacationRequestStore>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -48,6 +52,8 @@ app.MapGet("/api/status", () => Results.Json(new
 }))
 .WithName("Status")
 .WithOpenApi();
+
+app.MapVacationRoutes();
 
 if (Directory.Exists(wwwroot))
 {
