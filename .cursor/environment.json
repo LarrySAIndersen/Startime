@@ -1,7 +1,7 @@
 {
-  "name": "STAR Hub",
+  "name": "Startime",
   "user": "ubuntu",
-  "install": "python3 -m pip install -r apps/api/requirements.txt\nnpm ci --prefix apps/web\nbash .cursor/publish-github-on-install.sh",
+  "install": "bash .cursor/install-dotnet.sh\ndotnet restore backend/Startime.Api/Startime.Api.csproj\nnpm ci --prefix frontend\nbash .cursor/publish-github-on-install.sh",
   "start": "bash .cursor/start.sh",
   "ports": [
     {

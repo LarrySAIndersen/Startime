@@ -1,45 +1,43 @@
-# STAR Hub (Startime repo)
+# Startime
 
-STAR Hub er STARs egen webapp til fravær (sygdom, fri og ferie). Monorepo efter `PLAN.md` og `AGENTS.md`.
+React (Vite) + ASP.NET Core 8 — til lokal VM og Cloud Agent.
 
-| Del | Teknologi | Port (lokal) |
-|-----|-----------|--------------|
-| Web | Next.js 15 (App Router), TypeScript, Tailwind | 4319 |
-| API | Python 3.12, FastAPI | 5080 |
-| Infra (dev) | Docker Compose: PostgreSQL 16, Keycloak, Mailpit | 5432 / 8080 / 8025 |
+| Del | Teknologi | Port (dev) |
+|-----|-----------|------------|
+| Frontend | Vite, React, TypeScript | 4319 |
+| Backend | ASP.NET Core Web API | 5080 |
 
-Designreference: [`design/UI-SPEC.md`](design/UI-SPEC.md).
+## Lokal VM (denne maskine)
 
-## Kom i gang
-
-```bash
-cp .env.example .env
-make dev-infra   # kræver Docker
-make dev         # infra + API + web (parallel)
-```
-
-Uden Docker (kun UI + API-stub i Cloud Agent):
+**Udvikling** (Vite med proxy til API):
 
 ```bash
-python3 -m pip install -r apps/api/requirements.txt
-npm ci --prefix apps/web
-cd apps/api && uvicorn app.main:app --host 0.0.0.0 --port 5080
-cd apps/web && AUTH_DEV_BYPASS=1 npm run dev -- --hostname 0.0.0.0 --port 4319
+bash scripts/run-local-vm.sh
 ```
 
-Åbn [http://127.0.0.1:4319](http://127.0.0.1:4319). Med Keycloak: log ind som fx `leder1` / `StarDev1!` (realm `star-dev`).
+Åbn [http://127.0.0.1:4319](http://127.0.0.1:4319). API direkte: [http://127.0.0.1:5080/api/health](http://127.0.0.1:5080/api/health).
 
-## Kvalitet
+**Deploy lokalt** (byg React, server alt fra .NET på én port):
 
 ```bash
-make lint
-make test
+bash scripts/deploy-local-vm.sh
+# standard port 5080 — anden port: STARTIME_PORT=8080 bash scripts/deploy-local-vm.sh
 ```
+
+Stop dev: `bash scripts/stop-local-vm.sh`.
+
+## Manuel start
+
+```bash
+npm run install:all
+npm run dev:api    # terminal 1
+npm run dev:web    # terminal 2
+```
+
+## Cloud Agent
+
+[`.cursor/environment.json`](.cursor/environment.json) installerer .NET SDK, `dotnet restore`, `npm ci` i `frontend/`, og starter begge services via tmux.
 
 ## GitHub
 
-Kode pushes til [LarrySAIndersen/Startime](https://github.com/LarrySAIndersen/Startime) via `scripts/push-to-github.sh` (kræver `GH_TOKEN` i miljøet).
-
-## Status
-
-- **Fase 0 (igang):** monorepo-skelet, UI-shell (overblik, login), API health + dev `/me`. Keycloak BFF og JWT (P0-02/P0-03) og Alembic (P0-04) følger i næste tasks.
+[LarrySAIndersen/Startime](https://github.com/LarrySAIndersen/Startime) — `npm run push:github` når `GH_TOKEN` er sat.

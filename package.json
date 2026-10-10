@@ -1,0 +1,15 @@
+{
+  "name": "startime",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Startime — React frontend + .NET API",
+  "scripts": {
+    "install:all": "bash .cursor/install-dotnet.sh && dotnet restore backend/Startime.Api/Startime.Api.csproj && npm ci --prefix frontend",
+    "dev:web": "npm run dev --prefix frontend",
+    "dev:api": "dotnet run --project backend/Startime.Api/Startime.Api.csproj --urls http://0.0.0.0:5080",
+    "push:github": "bash scripts/push-to-github.sh",
+    "local:dev": "bash scripts/run-local-vm.sh",
+    "local:deploy": "bash scripts/deploy-local-vm.sh",
+    "local:stop": "bash scripts/stop-local-vm.sh"
+  }
+}

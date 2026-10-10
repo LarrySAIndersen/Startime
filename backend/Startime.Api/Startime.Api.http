@@ -1,0 +1,6 @@
+@Startime.Api_HostAddress = http://localhost:5214
+
+GET {{Startime.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
