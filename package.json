@@ -10,6 +10,7 @@
     "push:github": "bash scripts/push-to-github.sh",
     "local:dev": "bash scripts/run-local-vm.sh",
     "local:deploy": "bash scripts/deploy-local-vm.sh",
-    "local:stop": "bash scripts/stop-local-vm.sh"
+    "local:stop": "bash scripts/stop-local-vm.sh",
+    "demo:reset": "bash scripts/reset-demo-db.sh"
   }
 }

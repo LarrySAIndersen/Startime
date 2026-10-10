@@ -1,43 +1,50 @@
-# Startime (STAR Hub fravær)
+# Startime — STAR Hub fravær
 
-React (Vite) + ASP.NET Core 8 — implementerer `PLAN.md` (fravær: syg, fri, ferie) med demo-login på VM; Keycloak i produktion.
+React (Vite) + ASP.NET Core 8. Funktionsomfang og regler: [`PLAN.md`](PLAN.md).
 
-| Del | Teknologi | Port (dev) |
-|-----|-----------|------------|
-| Frontend | Vite, React, TypeScript | 4319 |
-| Backend | ASP.NET Core Web API | 5080 |
+| Dokument | Indhold |
+|----------|---------|
+| [`docs/PRINCIPPER-OG-DATABESKYTTELSE.md`](docs/PRINCIPPER-OG-DATABESKYTTELSE.md) | Databeskyttelse, non-negotiables, retention, demo vs. prod |
+| [`docs/DEMO-VEJLEDNING.md`](docs/DEMO-VEJLEDNING.md) | Scenarie-for-scenarie demo af alle funktioner |
+| [`design/UI-SPEC.md`](design/UI-SPEC.md) | Dansk UI og design tokens |
+| [`AGENTS.md`](AGENTS.md) | Krav til AI/udviklere |
 
-## Lokal VM (denne maskine)
+**GitHub:** [LarrySAIndersen/Startime](https://github.com/LarrySAIndersen/Startime)
 
-**Udvikling** (Vite med proxy til API):
-
-```bash
-bash scripts/run-local-vm.sh
-```
-
-Åbn [http://127.0.0.1:4319](http://127.0.0.1:4319). API direkte: [http://127.0.0.1:5080/api/health](http://127.0.0.1:5080/api/health).
-
-**Deploy lokalt** (byg React, server alt fra .NET på én port):
+## Hurtig demo (én port)
 
 ```bash
+git clone https://github.com/LarrySAIndersen/Startime.git
+cd Startime
 bash scripts/deploy-local-vm.sh
-# standard port 5080 — anden port: STARTIME_PORT=8080 bash scripts/deploy-local-vm.sh
 ```
 
-Stop dev: `bash scripts/stop-local-vm.sh`.
+→ [http://127.0.0.1:5080/login](http://127.0.0.1:5080/login)
 
-## Manuel start
+Nulstil data: `bash scripts/reset-demo-db.sh && bash scripts/deploy-local-vm.sh`
+
+## Udvikling
+
+| Del | Port |
+|-----|------|
+| Vite (`scripts/run-local-vm.sh`) | 4319 |
+| API | 5080 |
 
 ```bash
 npm run install:all
-npm run dev:api    # terminal 1
-npm run dev:web    # terminal 2
+npm run local:dev      # tmux: api + web
+npm run local:deploy   # production-like single port
+npm run local:stop
 ```
 
-## Cloud Agent
+## Push til GitHub
 
-[`.cursor/environment.json`](.cursor/environment.json) installerer .NET SDK, `dotnet restore`, `npm ci` i `frontend/`, og starter begge services via tmux.
+Sæt classic PAT med `repo` som secret **`GH_TOKEN`** (Cursor Environment) eller:
 
-## GitHub
+```bash
+npm run push:github
+```
 
-[LarrySAIndersen/Startime](https://github.com/LarrySAIndersen/Startime) — `npm run push:github` når `GH_TOKEN` er sat.
+## Bevidst udskudt
+
+Keycloak BFF + JWT og PostgreSQL/migrations-job — se princip-dokumentet §8–§9.

@@ -22,10 +22,10 @@ approval. It replaces sick reporting in Slack. It must run entirely on STAR's EU
 3. **Never log personal data.** Logs may contain user UUIDs and request ids — never names,
    e-mails, absence types, dates of absence, or rejection reasons.
 4. **Authorization lives in the API.** The web app hides things for UX, but every rule is
-   enforced in FastAPI. Never trust role claims sent from the browser.
+   enforced in the backend (this repo: **ASP.NET Core**). Never trust role claims sent from the browser.
 5. **Sick is masked.** Only the subject, their approvers (manager, active deputy, department
    lead) see type `sick`. Everyone else sees `absent`. Admins see no absence types at all.
-   Use the single visibility function in `apps/api/app/domain/visibility.py` — never re-implement it.
+   Use the single visibility function (`VisibilityService.cs` in this repo) — never re-implement it.
 6. **Every write is audited** through `audit.record(...)` in the same transaction.
    Every read of another person's sick data is written to `access_log`.
 7. **Migrations run only via Alembic as a separate Kubernetes Job.** Never run migrations on
@@ -45,16 +45,12 @@ approval. It replaces sick reporting in Slack. It must run entirely on STAR's EU
   on rules, roles or retention.
 - Prefer boring, well-known libraries. Ask before adding a new runtime dependency.
 
-## Stack
+## Stack (this repository — Startime on GitHub)
 
-- `apps/web`: Next.js 15 (App Router), TypeScript strict, server-side session (BFF) with
-  Keycloak via OIDC Authorization Code + PKCE. No tokens in localStorage.
-- `apps/api`: Python 3.12, FastAPI, SQLAlchemy 2 (typed), Alembic, Pydantic v2.
-- `apps/api` also contains the worker (`python -m app.worker`) using a PostgreSQL job queue
-  (Procrastinate). Same image, different command.
-- PostgreSQL 16. Local dev via `docker compose`: postgres, keycloak (realm import with demo
-  users), mailpit (SMTP sink).
-- Tests: pytest (+ testcontainers for Postgres), Playwright for e2e.
+- `frontend/`: Vite, React, TypeScript. Demo login until Keycloak BFF lands.
+- `backend/Startime.Api/`: ASP.NET Core 8, EF Core (SQLite demo; PostgreSQL planned).
+- Production target remains `PLAN.md`: Keycloak, PostgreSQL, outbox worker, EU hosting.
+- Human-readable policy: `docs/PRINCIPPER-OG-DATABESKYTTELSE.md`. Demo steps: `docs/DEMO-VEJLEDNING.md`.
 
 ## UI rules
 
