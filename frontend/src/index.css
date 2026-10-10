@@ -12,6 +12,10 @@
   --border-strong: #c9d0dd;
   --vacation-bg: #dce4f3;
   --vacation-fg: #003087;
+  --sick-bg: #fbe3e7;
+  --sick-fg: #9b0c24;
+  --dayoff-bg: #d3f4ef;
+  --dayoff-fg: #00574d;
   --pending-bg: #fff1d6;
   --pending-fg: #7a4b00;
   --radius-card: 12px;

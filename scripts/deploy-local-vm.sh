@@ -22,7 +22,7 @@ bash scripts/stop-local-vm.sh 2>/dev/null || true
 tmux -f /exec-daemon/tmux.portal.conf kill-session -t startime-prod 2>/dev/null || true
 
 tmux -f /exec-daemon/tmux.portal.conf new-session -d -s startime-prod -c "$PUBLISH_DIR" -- \
-  "${SHELL:-bash}" -l -c "ASPNETCORE_ENVIRONMENT=Production ASPNETCORE_URLS=http://0.0.0.0:${PORT} dotnet Startime.Api.dll"
+  "${SHELL:-bash}" -l -c "STARHUB_DB=${ROOT}/.local/starhub.db ASPNETCORE_ENVIRONMENT=Production ASPNETCORE_URLS=http://0.0.0.0:${PORT} dotnet Startime.Api.dll"
 
 echo ""
 echo "Startime (build + en port) kører på http://127.0.0.1:${PORT}"

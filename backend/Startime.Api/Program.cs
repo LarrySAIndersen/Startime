@@ -1,9 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using Startime.Api.Data;
+using Startime.Api.Middleware;
 using Startime.Api.Routes;
 using Startime.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<VacationRequestStore>();
+var dbPath = Environment.GetEnvironmentVariable("STARHUB_DB")
+    ?? Path.Combine("/workspace", ".local", "starhub.db");
+Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(dbPath))!);
+
+builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlite($"Data Source={dbPath}"));
+builder.Services.AddSingleton<AuditService>();
+builder.Services.AddScoped<AbsenceService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -20,6 +29,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+    SeedData.Ensure(db);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -27,6 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.UseMiddleware<DemoAuthMiddleware>();
 
 var wwwroot = Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 if (Directory.Exists(wwwroot))
@@ -38,22 +55,14 @@ if (Directory.Exists(wwwroot))
 app.MapGet("/api/health", () => Results.Json(new
 {
     ok = true,
-    service = "startime-api",
+    service = "star-hub-api",
     timestamp = DateTime.UtcNow,
-}))
-.WithName("Health")
-.WithOpenApi();
+}));
 
-app.MapGet("/api/status", () => Results.Json(new
-{
-    app = "Startime",
-    stack = new[] { "React", ".NET 8" },
-    message = "Frontend og API kører.",
-}))
-.WithName("Status")
-.WithOpenApi();
+app.MapGet("/healthz", () => Results.Json(new { status = "ok" }));
+app.MapGet("/readyz", () => Results.Json(new { status = "ready" }));
 
-app.MapVacationRoutes();
+app.MapStarHub();
 
 if (Directory.Exists(wwwroot))
 {

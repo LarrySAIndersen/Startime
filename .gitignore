@@ -10,6 +10,7 @@ backend/**/obj/
 frontend/dist/
 backend/Startime.Api/wwwroot/
 .local/
+*.db
 .next/
 out/
 

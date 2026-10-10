@@ -1,6 +1,6 @@
-# Startime
+# Startime (STAR Hub fravær)
 
-React (Vite) + ASP.NET Core 8 — til lokal VM og Cloud Agent.
+React (Vite) + ASP.NET Core 8 — implementerer `PLAN.md` (fravær: syg, fri, ferie) med demo-login på VM; Keycloak i produktion.
 
 | Del | Teknologi | Port (dev) |
 |-----|-----------|------------|
