@@ -1,13 +1,8 @@
 # dependencies
 node_modules/
-frontend/node_modules/
-
-# .NET
-backend/**/bin/
-backend/**/obj/
+apps/web/node_modules/
 
 # build
-frontend/dist/
 .next/
 out/
 

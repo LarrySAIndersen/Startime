@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export PATH="${HOME}/.dotnet:/usr/local/bin:${PATH}"
 cd /workspace
 
-if ! tmux -f /exec-daemon/tmux.portal.conf has-session -t "=startime-api" 2>/dev/null; then
-  tmux -f /exec-daemon/tmux.portal.conf new-session -d -s startime-api -c /workspace -- \
-    "${SHELL:-bash}" -l -c "dotnet run --project backend/Startime.Api/Startime.Api.csproj --urls http://0.0.0.0:5080"
+if ! tmux -f /exec-daemon/tmux.portal.conf has-session -t "=star-hub-api" 2>/dev/null; then
+  tmux -f /exec-daemon/tmux.portal.conf new-session -d -s star-hub-api -c /workspace/apps/api -- \
+    "${SHELL:-bash}" -l -c "python3 -m uvicorn app.main:app --host 0.0.0.0 --port 5080"
 fi
 
-if ! tmux -f /exec-daemon/tmux.portal.conf has-session -t "=startime-web" 2>/dev/null; then
-  tmux -f /exec-daemon/tmux.portal.conf new-session -d -s startime-web -c /workspace/frontend -- \
-    "${SHELL:-bash}" -l -c "npm run dev -- --host 0.0.0.0 --port 4319"
+if ! tmux -f /exec-daemon/tmux.portal.conf has-session -t "=star-hub-web" 2>/dev/null; then
+  tmux -f /exec-daemon/tmux.portal.conf new-session -d -s star-hub-web -c /workspace/apps/web -- \
+    "${SHELL:-bash}" -l -c "AUTH_DEV_BYPASS=1 NEXT_TELEMETRY_DISABLED=1 npm run dev -- --hostname 0.0.0.0 --port 4319"
 fi
