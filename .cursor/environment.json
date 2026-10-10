@@ -1,0 +1,17 @@
+{
+  "name": "Ny applikation",
+  "user": "ubuntu",
+  "install": "npm ci\nbash .cursor/bootstrap-from-reference.sh",
+  "start": "bash .cursor/start.sh",
+  "repositoryDependencies": [
+    "origin.cursor.com/git/larrysanders/stardesk",
+    "origin.cursor.com/git/larrysanders/web",
+    "origin.cursor.com/git/larrysanders/app"
+  ],
+  "ports": [
+    {
+      "name": "web",
+      "port": 4319
+    }
+  ]
+}
