@@ -1,6 +1,8 @@
-# Ny applikation
+# Startime
 
-Helt ny Next.js-app med Cursor Cloud Agent-opsætning som jeres andre Origin-projekter: repo-styret miljø, `install`/`start`, og dev-server til preview. Ingen delt kodebase med Stardesk eller andre apps.
+Helt ny Next.js-app med Cursor Cloud Agent-opsætning: repo-styret miljø, `install`/`start`, og dev-server til preview.
+
+GitHub-repo: [LarrySAIndersen/Startime](https://github.com/LarrySAIndersen/Startime)
 
 ## Kør lokalt
 
@@ -11,13 +13,14 @@ npm run dev
 
 Appen kører på [http://localhost:4319](http://localhost:4319).
 
+## Push til GitHub
+
+Fra Cloud Agent (når `GH_TOKEN` har **Contents: write** eller efter `gh auth login`):
+
+```bash
+npm run push:github
+```
+
 ## Cloud Agent
 
-Konfiguration i [`.cursor/environment.json`](.cursor/environment.json):
-
-- **`install`**: `npm ci`
-- **`start`**: starter dev-server i tmux (`dev-server`-session)
-
-## Opret permanent repo
-
-I Cursor-chatten: **Create repo**, når du er tilfreds med koden. Derefter kan du bruge **Publish** til Vercel, når integrationen er forbundet.
+[`.cursor/environment.json`](.cursor/environment.json): `npm ci`, valgfri auto-push, dev-server via `.cursor/start.sh` (port **4319**).

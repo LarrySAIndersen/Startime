@@ -18,10 +18,10 @@ export default function Home() {
             Cloud Agent · Origin
           </p>
           <h1 className="text-3xl font-semibold tracking-tight">
-            Ny applikation
+            Startime
           </h1>
           <p className="text-lg text-zinc-600">
-            Helt nyt projekt med samme Cloud Agent-opsætning som jeres andre
+            Helt nyt projekt (Startime) med samme Cloud Agent-opsætning som jeres andre
             apps: Next.js, `.cursor/environment.json`, dev-server på port 4319,
             og klar til Create repo og Publish.
           </p>

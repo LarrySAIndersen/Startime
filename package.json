@@ -1,12 +1,13 @@
 {
-  "name": "ny-applikation",
+  "name": "startime",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --port 4319",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "push:github": "bash scripts/push-to-github.sh"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

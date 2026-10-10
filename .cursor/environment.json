@@ -1,7 +1,7 @@
 {
   "name": "Ny applikation",
   "user": "ubuntu",
-  "install": "npm ci",
+  "install": "npm ci\nbash .cursor/publish-github-on-install.sh",
   "start": "bash .cursor/start.sh",
   "ports": [
     {
