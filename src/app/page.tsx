@@ -1,4 +1,6 @@
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -34,14 +36,17 @@ export default function Home() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3 sm:flex-row">
-            <Button asChild>
-              <a href="https://cursor.com/docs/cloud-agent" target="_blank" rel="noreferrer">
-                Cloud Agent docs
-              </a>
-            </Button>
-            <Button variant="outline" asChild>
-              <a href="/api/health">API health</a>
-            </Button>
+            <a
+              href="https://cursor.com/docs/cloud-agent"
+              target="_blank"
+              rel="noreferrer"
+              className={cn(buttonVariants())}
+            >
+              Cloud Agent docs
+            </a>
+            <Link href="/api/health" className={cn(buttonVariants({ variant: "outline" }))}>
+              API health
+            </Link>
           </CardContent>
         </Card>
       </main>
