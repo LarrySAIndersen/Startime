@@ -10,6 +10,10 @@ out/
 .env*
 !.env.example
 
+# python
+__pycache__/
+*.py[cod]
+
 # misc
 .DS_Store
 *.pem
